@@ -23,9 +23,9 @@ galaxy_info:
   galaxy_tags:
     - bigdata
     - nifi
-    - data_routing
-    - data_flow
-    - data_mediation
+    - datarouting
+    - dataflow
+    - datamediation
     - eip
     - security
     - tls
