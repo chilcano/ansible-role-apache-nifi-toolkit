@@ -1,0 +1,29 @@
+---
+- name: Define 'nftk' hash as fact.
+  set_fact:
+    __nftk: "{{ nftk_default | combine(nftk) }}"
+
+- name: Define facts.
+  set_fact:
+    __nftk_bundle_bin: "nifi-toolkit-{{ __nftk.version }}-bin.{{ __nftk.packaging_bin }}"
+    __nftk_bundle_src: "nifi-toolkit-{{ __nftk.version }}-source-release.{{ __nftk.packaging_src }}"
+
+- name: Define facts.
+  set_fact:
+    __nftk_url_bin_installer: "{{ __nftk.download.http_uri }}/nifi/{{ __nftk.version }}/{{ __nftk_bundle_bin }}"
+    __nftk_url_src_tarball: "{{ __nftk.download.http_uri }}/nifi/{{ __nftk.version }}/{{ __nftk_bundle_src }}"
+
+- name: Clean previous NiFi Toolkit installation and generated files.
+  include: clean.yml
+
+- name: Install and configure NiFi Toolkit.
+  include: install.yml
+  when: ( {{ nftk.action.install }} )
+
+- name: Run a NiFi Toolkit command.
+  include: run_cmd.yml
+  when: ( {{ nftk.action.install }} and {{ nftk.action.run_cmd }} )
+
+- name: Fetch the NiFi Toolkit output directory.
+  include: sync.yml
+  when: ( {{ nftk.action.sync }} )

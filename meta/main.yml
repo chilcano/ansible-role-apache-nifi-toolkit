@@ -1,0 +1,35 @@
+---
+dependencies: []
+galaxy_info:
+  author: Roger Carhuatocto
+  description: An Ansible Role that installs Apache NiFi Toolkit and and runs commands to get x.509, Java KeyStore, TrustStore required to configure NiFi securely.
+  company: HolisticSecurity.io
+  license: license (MIT)
+  min_ansible_version: 2.0
+  platforms:
+    - name: EL
+      versions:
+      - 6
+      - 7
+    - name: Fedora
+      versions:
+      - all
+    - name: Debian
+      versions:
+      - all
+    - name: Ubuntu
+      versions:
+      - all
+  galaxy_tags:
+    - bigdata
+    - nifi
+    - data-routing
+    - data-flow
+    - data-mediation
+    - eip
+    - security
+    - tls
+    - ssl
+    - X.509
+    - system
+    - iot

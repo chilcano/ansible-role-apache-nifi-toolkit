@@ -1,0 +1,14 @@
+---
+- name: Checking if the NiFi Toolkit output directory exists.
+  stat: path="{{ nftk_cfg.dir_home }}/{{ nftk_cfg.dir_repo }}"
+  register: my_output_dir
+
+- name: Synchronizing the NiFi Toolkit output directory to local.
+  synchronize:
+    mode: pull
+    src: "{{ nftk_cfg.dir_home }}/{{ nftk_cfg.dir_repo }}"
+    dest: "{{ nftk_sync_dir_local }}/{{ ansible_hostname }}"
+    recursive: yes
+    delete: no
+    times: yes
+  when: "nftk_run.cmd is defined and nftk_run.cmd != '-h' and nftk_run.cmd != 'standalone -h' and my_output_dir.stat.exists"

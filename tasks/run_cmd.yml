@@ -1,0 +1,38 @@
+---
+- name: Creating NiFi Toolkit output directory.
+  file:
+    dest: "{{ item.dst }}"
+    owner: "{{ nftk_cfg.linux_usr }}"
+    group: "{{ nftk_cfg.linux_grp }}"
+    #mode: "{{ nftk_cfg.linux_mode }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - { dst: '{{ nftk_cfg.dir_home }}/{{ nftk_cfg.dir_repo }}' }
+
+- name: Defining command to run.
+  set_fact:
+    nftk_run_cmd_fact: >
+      {{ nftk_cfg.dir_home }}/{{ nftk_cfg.sym_link }}/bin/tls-toolkit.sh
+      {{ nftk_run.cmd }}
+      -o {{ nftk_cfg.dir_home }}/{{ nftk_cfg.dir_repo }}
+      {% if nftk_run.clientpasswd is defined %}-B {{ nftk_run.clientpasswd }}{% endif %}
+      {% if nftk_run.keypasswd is defined %}-K {{ nftk_run.keypasswd }}{% endif %}
+      {% if nftk_run.truststorepasswd is defined %}-P {{ nftk_run.truststorepasswd }}{% endif %}
+      {% if nftk_run.keystorepasswd is defined %}-S {{ nftk_run.keystorepasswd }}{% endif %}
+
+- name: Running the command.
+  shell: "{{ nftk_run_cmd_fact }}"
+  args:
+    chdir: "{{ nftk_cfg.dir_home }}/{{ nftk_cfg.sym_link }}/bin/"
+  when: "nftk_run.cmd == '-h' or 'standalone' in nftk_run.cmd"
+  register: my_nifi_toolkit_result
+  failed_when: "'FAILED' in my_nifi_toolkit_result.stderr"
+
+- debug:
+    msg: "rc: {{ my_nifi_toolkit_result.rc }}, command: {{ nftk_run.cmd }}"
+  when: "nftk_run.cmd == '-h' or 'standalone' in nftk_run.cmd"
+
+- debug:
+    msg: "{{ my_nifi_toolkit_result.stdout_lines }}"
+  when: "nftk_run.cmd == '-h' or 'standalone' in nftk_run.cmd"

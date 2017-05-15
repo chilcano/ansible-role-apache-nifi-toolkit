@@ -1,0 +1,53 @@
+---
+nftk_default:
+  version: "1.2.0"
+  packaging_bin: "tar.gz"
+  packaging_src: "zip"
+  action:
+    clean:
+      installation: false
+      repository: false
+      dependencies: false
+    install: true
+    run_cmd: true
+    sync: true
+  download:
+    http_uri: "http://apache.rediris.es"
+
+# http://apache.rediris.es/nifi/1.1.2/nifi-1.1.2-bin.tar.gz
+# http://apache.rediris.es/nifi/1.1.2/nifi-1.1.2-source-release.zip
+# http://apache.rediris.es/nifi/1.1.2/nifi-toolkit-1.1.2-bin.tar.gz
+# http://apache.rediris.es/nifi/1.1.2/nifi-toolkit-1.1.2-bin.zip
+# http://apache.rediris.es/nifi/minifi/0.1.0/minifi-0.1.0-source-release.zip
+# http://apache.rediris.es/nifi/minifi/0.1.0/minifi-0.1.0-bin.tar.gz
+
+### install / configuration
+nftk_cfg:
+  dir_home: "/opt"
+  sym_link: "nifi-toolkit"
+  dir_repo: "nifi-toolkit_repo"
+  linux_usr: "nifi"
+  linux_grp: "nifi"
+  linux_mode: "0750"
+  linux_root: "root"
+
+### run cmd
+#The 'standalone' service is implemented, server (no implemented in this role), client (no implemented in this role)
+nftk_run:
+  cmd: "-h"
+  clientpasswd: demo00a
+  keypasswd: demo00b
+  truststorepasswd: demo00c
+  keystorepasswd: demo00d
+
+# -B,--clientCertPassword <arg>
+#    Password for client certificate.  Must either be one value or one for each client DN. (autogenerate if not specified)
+# -K,--keyPassword <arg>
+#    Key password to use.  Must either be one value or one for each host. (autogenerate if not specified)
+# -P,--trustStorePassword <arg>
+#    Keystore password to use.  Must either be one value or one for each host. (autogenerate if not specified)
+# -S,--keyStorePassword <arg>
+#    Keystore password to use.  Must either be one value or one for each host. (autogenerate if not specified)
+
+### sync repo
+nftk_sync_dir_local: "/Users/Chilcano"

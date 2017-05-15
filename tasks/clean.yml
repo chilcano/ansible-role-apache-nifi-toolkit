@@ -1,0 +1,35 @@
+---
+- name: Finding Nifi Toolkit installation files.
+  find:
+    paths:
+      - "/home/{{ ansible_user }}/"
+    file_type: file
+    patterns: "^(nifi)(.*)$"
+    use_regex: true
+  register: my_files_to_cleanup
+  when: ( {{ nftk.action.clean.installation }} )
+
+- name: Deleting Nifi Toolkit installation files and directories.
+  file:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ my_files_to_cleanup.files }}"
+    - "{{ nftk_cfg.dir_home }}/{{ nftk_cfg.sym_link }}"
+    - "{{ nftk_cfg.dir_home }}/nifi-toolkit-{{ nftk.version }}"
+  when: ( {{ nftk.action.clean.installation }} )
+
+- name: Deleting Nifi Toolkit Repository (Configuration, Java KeyStore and TrustStore, PKCS12 files).
+  file:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ nftk_cfg.dir_home }}/{{ nftk_cfg.dir_repo }}"
+  when: ( {{ nftk.action.clean.repository }} )
+
+- name: Uninstalling dependencies.
+  apt:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ my_java_packages }}"
+  when: ( {{ nftk.action.clean.installation }} and {{ nftk.action.clean.dependencies }} )

@@ -1,0 +1,42 @@
+---
+- name: Check if NiFi Toolkit binary has already been downloaded.
+  stat: path="/home/{{ ansible_ssh_user }}/{{ __nftk_bundle_bin }}"
+  register: my_nftk_binary
+
+- name: Download NiFi Toolkit binary installer from '{{ __nftk_url_bin_installer }}'.
+  get_url:
+    url: "{{ __nftk_url_bin_installer }}"
+    dest: "/home/{{ ansible_ssh_user }}/"
+  when: not my_nftk_binary.stat.exists
+
+- name: Create NiFi Toolkit linux group.
+  group:
+    name: "{{ nftk_cfg.linux_grp }}"
+    state: present
+
+- name: Create NiFi Toolkit linux user.
+  user:
+    name: "{{ nftk_cfg.linux_usr }}"
+    shell: /bin/bash
+    groups: "root,{{ nftk_cfg.linux_grp }}"
+    append: yes
+
+- name: Unarchive NiFi Toolkit binary tarball.
+  unarchive:
+    src: "/home/{{ ansible_ssh_user }}/{{ __nftk_bundle_bin }}"
+    dest: "{{ nftk_cfg.dir_home }}/"
+    copy: no
+    owner: "{{ nftk_cfg.linux_usr }}"
+    group: "{{ nftk_cfg.linux_grp }}"
+    #mode: "{{ nftk_cfg.linux_mode }}"
+
+- name: Creating a symbolic link to NiFi Toolkit directory.
+  file:
+    src: "{{ nftk_cfg.dir_home }}/nifi-toolkit-{{ nftk.version }}"
+    dest: "{{ item.dst }}"
+    owner: "{{ nftk_cfg.linux_usr }}"
+    group: "{{ nftk_cfg.linux_grp }}"
+    #mode: "{{ nftk_cfg.linux_mode }}"
+    state: link
+  with_items:
+    - { dst: '{{ nftk_cfg.dir_home }}/{{ nftk_cfg.sym_link }}' }
