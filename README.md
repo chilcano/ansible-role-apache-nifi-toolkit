@@ -15,7 +15,7 @@ This Role provides the following features:
 
 ## Role Variables
 
-Default variables is in `defaults/main.yml`.
+Default variables are in `defaults/main.yml`.
 
 ## Dependencies
 
