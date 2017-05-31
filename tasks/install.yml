@@ -1,5 +1,12 @@
 ---
-- name: Check if NiFi Toolkit binary has already been downloaded.
+- name: Copy NiFi Toolkit binary installer from 'local' to 'remote host (VM)'.
+  copy:
+    src: "{{ nftk_sync_dir_local }}/{{ __nftk_bundle_bin }}"
+    dest: "/home/{{ ansible_ssh_user }}/{{ __nftk_bundle_bin }}"
+  register: my_binary_copied
+  ignore_errors: True
+
+- name: Check if NiFi Toolkit binary has already been copied.
   stat: path="/home/{{ ansible_ssh_user }}/{{ __nftk_bundle_bin }}"
   register: my_nftk_binary
 
@@ -8,6 +15,13 @@
     url: "{{ __nftk_url_bin_installer }}"
     dest: "/home/{{ ansible_ssh_user }}/"
   when: not my_nftk_binary.stat.exists
+
+- name: Fetch NiFi Toolkit binary installer from 'remote host (VM)' to 'local'.
+  fetch:
+    src: "/home/{{ ansible_ssh_user }}/{{ __nftk_bundle_bin }}"
+    dest: "{{ nftk_sync_dir_local }}/{{ __nftk_bundle_bin }}"
+    flat: yes
+  when: not my_binary_copied|succeeded
 
 - name: Create NiFi Toolkit linux group.
   group:
