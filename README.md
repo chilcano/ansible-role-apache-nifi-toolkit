@@ -90,6 +90,10 @@ The final folder structure with Keys, Certificates and configuration files will 
 
 ![Apache NiFi Toolkit - folder structure and files generated](https://github.com/chilcano/ansible-role-apache-nifi-toolkit/blob/master/ansible-role-apache-nifi-toolkit-folder-struct.png "Apache NiFi Toolkit - folder structure and files")
 
+## Updated
+
+* Now the Role copy binary/installer from local filesystem, if it doesn't exist, then try to download from URL. Finally downloaded binary will be copied to local filesystem to be reused.
+
 ## License
 
 MIT / BSD

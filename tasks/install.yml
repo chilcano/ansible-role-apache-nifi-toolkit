@@ -1,5 +1,5 @@
 ---
-- name: Copy NiFi Toolkit binary installer from 'local' to 'remote host (VM)'.
+- name: Copy NiFi Toolkit binary installer from 'local' to 'remote'.
   copy:
     src: "{{ nftk_sync_dir_local }}/{{ __nftk_bundle_bin }}"
     dest: "/home/{{ ansible_ssh_user }}/{{ __nftk_bundle_bin }}"
@@ -16,7 +16,7 @@
     dest: "/home/{{ ansible_ssh_user }}/"
   when: not my_nftk_binary.stat.exists
 
-- name: Fetch NiFi Toolkit binary installer from 'remote host (VM)' to 'local'.
+- name: Fetch NiFi Toolkit binary installer from 'remote' to 'local'.
   fetch:
     src: "/home/{{ ansible_ssh_user }}/{{ __nftk_bundle_bin }}"
     dest: "{{ nftk_sync_dir_local }}/{{ __nftk_bundle_bin }}"
